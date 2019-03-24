@@ -11,5 +11,9 @@ class Edible:
     def get_position(self):
         return self.x, self.y, self.size, self.size
 
-    def move_edible(self):
+    def move_edible(self, snake):
         self.x, self.y = randint(1, 49) * 10, randint(1, 49) * 10
+        for snake_bit in snake:
+            if self.get_position() == snake_bit.get_position():
+                self.move_edible(snake)
+                break

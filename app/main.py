@@ -16,7 +16,6 @@ while handler.is_running:
 
     window.fill((0, 0, 0))
     handler.update(pygame.key.get_pressed())
-    pygame.draw.rect(window, (255, 0, 0), (50, 50, 10, 10))
     handler.next_frame(window)
 
 
