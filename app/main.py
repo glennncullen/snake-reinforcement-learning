@@ -1,5 +1,7 @@
 import pygame
+import random as r
 from app.handler import *
+
 
 handler = Handler.get_instance()
 

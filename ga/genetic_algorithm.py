@@ -39,12 +39,15 @@ class GeneticAlgoritthm:
         return tournament_population.get_fittest()
 
     def reproduce(self, mother, father):
-        baby  = Individual()
-        for i in range(len(mother.genes)):
-            if random.random() < self.uniform_rate:
-                baby.set_gene(i, mother.get_gene(i))
-            else:
-                baby.set_gene(i, father.get_gene(i))
+        baby = Individual()
+        for i in range(len(mother.gene_size)):
+            new_gene = ""
+            for y in range(len(str(mother.genes[i]))):
+                if random.random() < self.uniform_rate:
+                    new_gene += mother.get_gene(i, y)
+                else:
+                    new_gene += father.get_gene(i, y)
+            baby.genes.append(float(new_gene))
         return baby
 
     def mutate(self, ind):
