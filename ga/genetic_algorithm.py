@@ -4,7 +4,7 @@ from ga.individual import Individual
 from ga.population import Population
 
 
-class GeneticAlgoritthm:
+class GeneticAlgorithm:
 
     def __init__(self):
         self.uniform_rate = 0.5
@@ -13,11 +13,11 @@ class GeneticAlgoritthm:
         self.elitism_offset = 1
 
     def evolve(self, population):
-        new_population = Population(len(population), False)
+        new_population = Population(len(population.individuals), False)
 
         new_population.individuals.append(population.get_fittest())
 
-        for i in range(len(population) - self.elitism_offset):
+        for i in range(len(population.individuals) - self.elitism_offset):
             if i <= self.elitism_offset:
                 continue
             mother = self.tournament(population)
@@ -35,19 +35,23 @@ class GeneticAlgoritthm:
     def tournament(self, population):
         tournament_population = Population(self.tournament_size, False)
         for i in range(self.tournament_size):
-            random.choice(population.individuals)
+            tournament_population.individuals.append(random.choice(population.individuals))
         return tournament_population.get_fittest()
 
     def reproduce(self, mother, father):
+        print("mother: ", mother.genes)
+        print("father: ", father.genes)
         baby = Individual()
-        for i in range(len(mother.gene_size)):
+        for i in range(mother.gene_size):
             new_gene = ""
-            for y in range(len(str(mother.genes[i]))):
+            new_gene_size = min(len(str(mother.genes[i])), len(str(father.genes[i])))
+            for y in range(new_gene_size):
                 if random.random() < self.uniform_rate:
                     new_gene += mother.get_gene(i, y)
                 else:
                     new_gene += father.get_gene(i, y)
             baby.genes.append(float(new_gene))
+        print("baby:   ", baby.genes)
         return baby
 
     def mutate(self, ind):

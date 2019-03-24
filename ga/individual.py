@@ -5,11 +5,11 @@ class Individual:
 
     def __init__(self):
         self.fitness = 0
-        self.gene_size = 3
+        self.gene_size = 4
         self.genes = []
 
     def generate(self):
-        for i in self.gene_size:
+        for i in range(self.gene_size):
             self.genes.append(random.random())
 
     def get_gene(self, gene_index, gene_code):
