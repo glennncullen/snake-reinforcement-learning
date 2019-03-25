@@ -11,9 +11,6 @@ class Population:
                 ind.generate()
                 self.individuals.append(ind)
 
-    # def get_individual(self, index):
-    #     return self.individuals[index]
-
     def set_individual(self, index, ind):
         self.individuals[index] = ind
 

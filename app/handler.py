@@ -42,6 +42,7 @@ class Handler:
 
         self.fuel = 100
         self.points = 0
+        self.time_lasted = 0
 
         self.edible = Edible()
         self.snake = Snake()
@@ -88,6 +89,7 @@ class Handler:
         self.snake.move(self.current_direction)
 
         self.fuel -= 1
+        self.time_lasted += 1
 
         self.check_eating()
         self.check_dead()
@@ -123,7 +125,7 @@ class Handler:
 
     def check_eating(self):
         if self.edible.get_position() == self.snake.body[0].get_position():
-            self.edible.move_edible(self.snake.body)
+            self.edible.move_edible(self.snake.body, self.points)
             self.snake.add_piece()
             self.points += 1
             self.fuel = 100
@@ -146,11 +148,10 @@ class Handler:
                 self.funeral_arrangements("ate himself")
 
     def funeral_arrangements(self, cause_of_death):
-        self.population.individuals[self.current_snake].fitness = self.points
+        self.population.individuals[self.current_snake].fitness = math.pow(self.points, 2) + self.time_lasted
         self.fuel = 100
         self.points = 0
         self.current_snake += 1
-        print(len(self.population.individuals))
         if self.current_snake >= len(self.population.individuals):
             self.population = self.ga.evolve(self.population)
             self.current_snake = 0
@@ -158,7 +159,7 @@ class Handler:
         self.snake.body = []
         self.snake.create_head()
         self.current_direction = self.directions['right']
-        self.edible.move_edible(self.snake.body)
+        self.edible.move_edible(self.snake.body, self.points)
         # print(cause_of_death)
 
     def calculate_move(self):
@@ -175,43 +176,43 @@ class Handler:
 
         if self.current_direction is self.directions['up']:
             distance_to_edible = [
-                math.sqrt(math.pow((udlr['up'][0] + self.edible.x), 2) +
-                          math.pow((udlr['up'][1] + self.edible.y), 2)) / 100,
+                math.sqrt(math.pow((udlr['up'][0] - self.edible.x), 2) +
+                          math.pow((udlr['up'][1] - self.edible.y), 2)) / 100,
                 0,
-                math.sqrt(math.pow((udlr['left'][0] + self.edible.x), 2) +
-                          math.pow((udlr['left'][1] + self.edible.y), 2)) / 100,
-                math.sqrt(math.pow((udlr['right'][0] + self.edible.x), 2) +
-                          math.pow((udlr['right'][1] + self.edible.y), 2)) / 100
+                math.sqrt(math.pow((udlr['left'][0] - self.edible.x), 2) +
+                          math.pow((udlr['left'][1] - self.edible.y), 2)) / 100,
+                math.sqrt(math.pow((udlr['right'][0] - self.edible.x), 2) +
+                          math.pow((udlr['right'][1] - self.edible.y), 2)) / 100
             ]
         if self.current_direction is self.directions['down']:
             distance_to_edible = [
                 0,
-                math.sqrt(math.pow((udlr['down'][0] + self.edible.x), 2) +
-                          math.pow((udlr['down'][1] + self.edible.y), 2)) / 100,
-                math.sqrt(math.pow((udlr['left'][0] + self.edible.x), 2) +
-                          math.pow((udlr['left'][1] + self.edible.y), 2)) / 100,
-                math.sqrt(math.pow((udlr['right'][0] + self.edible.x), 2) +
-                          math.pow((udlr['right'][1] + self.edible.y), 2)) / 100
+                math.sqrt(math.pow((udlr['down'][0] - self.edible.x), 2) +
+                          math.pow((udlr['down'][1] - self.edible.y), 2)) / 100,
+                math.sqrt(math.pow((udlr['left'][0] - self.edible.x), 2) +
+                          math.pow((udlr['left'][1] - self.edible.y), 2)) / 100,
+                math.sqrt(math.pow((udlr['right'][0] - self.edible.x), 2) +
+                          math.pow((udlr['right'][1] - self.edible.y), 2)) / 100
             ]
         if self.current_direction is self.directions['left']:
             distance_to_edible = [
-                math.sqrt(math.pow((udlr['up'][0] + self.edible.x), 2) +
-                          math.pow((udlr['up'][1] + self.edible.y), 2)) / 100,
-                math.sqrt(math.pow((udlr['down'][0] + self.edible.x), 2) +
-                          math.pow((udlr['down'][1] + self.edible.y), 2)) / 100,
-                math.sqrt(math.pow((udlr['left'][0] + self.edible.x), 2) +
-                          math.pow((udlr['left'][1] + self.edible.y), 2)) / 100,
+                math.sqrt(math.pow((udlr['up'][0] - self.edible.x), 2) +
+                          math.pow((udlr['up'][1] - self.edible.y), 2)) / 100,
+                math.sqrt(math.pow((udlr['down'][0] - self.edible.x), 2) +
+                          math.pow((udlr['down'][1] - self.edible.y), 2)) / 100,
+                math.sqrt(math.pow((udlr['left'][0] - self.edible.x), 2) +
+                          math.pow((udlr['left'][1] - self.edible.y), 2)) / 100,
                 0
             ]
         if self.current_direction is self.directions['right']:
             distance_to_edible = [
-                math.sqrt(math.pow((udlr['up'][0] + self.edible.x), 2) +
-                          math.pow((udlr['up'][1] + self.edible.y), 2)) / 100,
-                math.sqrt(math.pow((udlr['down'][0] + self.edible.x), 2) +
-                          math.pow((udlr['down'][1] + self.edible.y), 2)) / 100,
+                math.sqrt(math.pow((udlr['up'][0] - self.edible.x), 2) +
+                          math.pow((udlr['up'][1] - self.edible.y), 2)) / 100,
+                math.sqrt(math.pow((udlr['down'][0] - self.edible.x), 2) +
+                          math.pow((udlr['down'][1] - self.edible.y), 2)) / 100,
                 0,
-                math.sqrt(math.pow((udlr['right'][0] + self.edible.x), 2) +
-                          math.pow((udlr['right'][1] + self.edible.y), 2)) / 100
+                math.sqrt(math.pow((udlr['right'][0] - self.edible.x), 2) +
+                          math.pow((udlr['right'][1] - self.edible.y), 2)) / 100
             ]
 
         # if self.current_direction is self.directions['up']:
@@ -240,8 +241,8 @@ class Handler:
         #     }
 
         # print("direction: ", self.current_direction)
-        print("position:  ", snake_head.get_x_y())
-        print("genes:     ", self.population.individuals[self.current_snake].genes)
+        # print("position:  ", snake_head.get_x_y())
+        # print("genes:     ", self.population.individuals[self.current_snake].genes)
         # print("moves:     ", possible_moves['forward'], possible_moves['left'], possible_moves['right'])
 
         # distance_to_edible = [
@@ -253,7 +254,7 @@ class Handler:
         #               math.pow((possible_moves['right'][1] + self.edible.y), 2)) / 100
         # ]
 
-        print("dist edib: ", distance_to_edible)
+        # print("dist edib: ", distance_to_edible)
 
         move_calculations = [
             self.population.individuals[self.current_snake].genes[0] * distance_to_edible[0],
@@ -262,10 +263,20 @@ class Handler:
             self.population.individuals[self.current_snake].genes[3] * distance_to_edible[3]
         ]
 
-        winner = max(move_calculations)
+        remove_zero = []
+        if move_calculations[0] != 0:
+            remove_zero.append(move_calculations[0])
+        if move_calculations[1] != 0:
+            remove_zero.append(move_calculations[1])
+        if move_calculations[2] != 0:
+            remove_zero.append(move_calculations[2])
+        if move_calculations[3] != 0:
+            remove_zero.append(move_calculations[3])
 
-        print(winner, move_calculations)
-        print("")
+        winner = min(remove_zero)
+
+        # print(winner, move_calculations)
+        # print("")
 
         if winner == move_calculations[0]:
             return self.directions['up']
