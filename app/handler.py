@@ -163,9 +163,7 @@ class Handler:
         # print(cause_of_death)
 
     def calculate_move(self):
-        # the square root of (x1 - x2)^2 + (y1 - y2)^2
         snake_head = self.snake.body[0]
-        possible_moves = {}
         distance_to_edible = []
         udlr = {
             'up': [snake_head.x, snake_head.y - 10],
@@ -215,81 +213,18 @@ class Handler:
                           math.pow((udlr['right'][1] - self.edible.y), 2))
             ]
 
-        # if self.current_direction is self.directions['up']:
-        #     possible_moves = {
-        #         'forward': [snake_head.x, snake_head.y - 10],
-        #         'left': [snake_head.x - 10, snake_head.y],
-        #         'right': [snake_head.x + 10, snake_head.y]
-        #     }
-        # if self.current_direction is self.directions['down']:
-        #     possible_moves = {
-        #         'forward': [snake_head.x, snake_head.y + 10],
-        #         'left': [snake_head.x + 10, snake_head.y],
-        #         'right': [snake_head.x - 10, snake_head.y]
-        #     }
-        # if self.current_direction is self.directions['left']:
-        #     possible_moves = {
-        #         'forward': [snake_head.x - 10, snake_head.y],
-        #         'left': [snake_head.x, snake_head.y + 10],
-        #         'right': [snake_head.x, snake_head.y - 10]
-        #     }
-        # if self.current_direction is self.directions['right']:
-        #     possible_moves = {
-        #         'forward': [snake_head.x + 10, snake_head.y],
-        #         'left': [snake_head.x, snake_head.y - 10],
-        #         'right': [snake_head.x, snake_head.y + 10]
-        #     }
-
-        # print("direction: ", self.current_direction)
-        # print("position:  ", snake_head.get_x_y())
-        print("genes:     ", self.population.individuals[self.current_snake].genes)
-        # print("moves:     ", possible_moves['forward'], possible_moves['left'], possible_moves['right'])
-
-        # distance_to_edible = [
-        #     math.sqrt(math.pow((possible_moves['forward'][0] + self.edible.x), 2) +
-        #               math.pow((possible_moves['forward'][1] + self.edible.y), 2)) / 100,
-        #     math.sqrt(math.pow((possible_moves['left'][0] + self.edible.x), 2) +
-        #               math.pow((possible_moves['left'][1] + self.edible.y), 2)) / 100,
-        #     math.sqrt(math.pow((possible_moves['right'][0] + self.edible.x), 2) +
-        #               math.pow((possible_moves['right'][1] + self.edible.y), 2)) / 100
-        # ]
-
-        print("dist edib: ", distance_to_edible)
-
-        # move_calculations = [
-        #     self.population.individuals[self.current_snake].genes[0] * distance_to_edible[0] +
-        #     self.population.individuals[self.current_snake].genes[1] * distance_to_edible[0] +
-        #     self.population.individuals[self.current_snake].genes[2] * distance_to_edible[0] +
-        #     self.population.individuals[self.current_snake].genes[3] * distance_to_edible[0],
-        #
-        #     self.population.individuals[self.current_snake].genes[0] * distance_to_edible[1] +
-        #     self.population.individuals[self.current_snake].genes[1] * distance_to_edible[1] +
-        #     self.population.individuals[self.current_snake].genes[2] * distance_to_edible[1] +
-        #     self.population.individuals[self.current_snake].genes[3] * distance_to_edible[1],
-        #
-        #     self.population.individuals[self.current_snake].genes[0] * distance_to_edible[2] +
-        #     self.population.individuals[self.current_snake].genes[1] * distance_to_edible[2] +
-        #     self.population.individuals[self.current_snake].genes[2] * distance_to_edible[2] +
-        #     self.population.individuals[self.current_snake].genes[3] * distance_to_edible[2],
-        #
-        #     self.population.individuals[self.current_snake].genes[0] * distance_to_edible[3] +
-        #     self.population.individuals[self.current_snake].genes[1] * distance_to_edible[3] +
-        #     self.population.individuals[self.current_snake].genes[2] * distance_to_edible[3] +
-        #     self.population.individuals[self.current_snake].genes[3] * distance_to_edible[3],
-        # ]
-
         move_calculations = [
             self.population.individuals[self.current_snake].genes[0] * distance_to_edible[0] +
-            self.population.individuals[self.current_snake].genes[3] * (udlr['up'][1] / 15),
+            self.population.individuals[self.current_snake].genes[1] * (udlr['up'][1] / 15),
 
             self.population.individuals[self.current_snake].genes[0] * distance_to_edible[1] +
-            self.population.individuals[self.current_snake].genes[3] * (udlr['down'][1] / 15),
+            self.population.individuals[self.current_snake].genes[1] * (udlr['down'][1] / 15),
 
             self.population.individuals[self.current_snake].genes[0] * distance_to_edible[2] +
-            self.population.individuals[self.current_snake].genes[3] * (udlr['left'][0] / 15),
+            self.population.individuals[self.current_snake].genes[1] * (udlr['left'][0] / 15),
 
             self.population.individuals[self.current_snake].genes[0] * distance_to_edible[3] +
-            self.population.individuals[self.current_snake].genes[3] * (udlr['right'][0] / 15),
+            self.population.individuals[self.current_snake].genes[1] * (udlr['right'][0] / 15),
         ]
 
         remove_zero = []
@@ -304,9 +239,6 @@ class Handler:
 
         winner = min(remove_zero)
 
-        print(winner, move_calculations)
-        print("")
-
         if winner == move_calculations[0]:
             return self.directions['up']
         if winner == move_calculations[1]:
@@ -315,26 +247,5 @@ class Handler:
             return self.directions['left']
         if winner == move_calculations[3]:
             return  self.directions['right']
-
-        # if winner == move_calculations[0]:
-        #     return self.current_direction
-        # if winner == move_calculations[1]:
-        #     if self.current_direction is self.directions['up']:
-        #         return self.directions['left']
-        #     if self.current_direction is self.directions['down']:
-        #         return self.directions['right']
-        #     if self.current_direction is self.directions['left']:
-        #         return self.directions['down']
-        #     if self.current_direction is self.directions['right']:
-        #         return self.directions['up']
-        # if winner == move_calculations[2]:
-        #     if self.current_direction is self.directions['up']:
-        #         return self.directions['right']
-        #     if self.current_direction is self.directions['down']:
-        #         return self.directions['left']
-        #     if self.current_direction is self.directions['left']:
-        #         return self.directions['up']
-        #     if self.current_direction is self.directions['right']:
-        #         return self.directions['down']
 
 

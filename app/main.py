@@ -20,5 +20,4 @@ while handler.is_running:
     handler.update(pygame.key.get_pressed())
     handler.next_frame(window)
 
-
 pygame.quit()

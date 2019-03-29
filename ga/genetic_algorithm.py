@@ -53,5 +53,7 @@ class GeneticAlgorithm:
 
     def mutate(self, ind):
         for i in range(len(ind.genes)):
+            if i < 3:
+                continue
             if random.random() <= self.mutation_rate:
                 ind.mutate_gene(i)
