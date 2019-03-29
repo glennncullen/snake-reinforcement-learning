@@ -1,6 +1,11 @@
 import pygame
 import random as r
 from app.handler import *
+import numpy as np
+
+weights = np.random.random((15, 20))
+print(weights)
+print(weights[len(weights)-1][len(weights[0])-1])
 
 
 handler = Handler.get_instance()

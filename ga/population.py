@@ -8,7 +8,6 @@ class Population:
         if initialise:
             for i in range(pop_size):
                 ind = Individual()
-                ind.generate()
                 self.individuals.append(ind)
 
     def set_individual(self, index, ind):

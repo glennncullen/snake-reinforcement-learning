@@ -40,20 +40,40 @@ class GeneticAlgorithm:
 
     def reproduce(self, mother, father):
         baby = Individual()
-        for i in range(mother.gene_size):
-            new_gene = ""
-            new_gene_size = min(len(str(mother.genes[i])), len(str(father.genes[i])))
-            for y in range(new_gene_size):
-                if random.random() < self.uniform_rate:
-                    new_gene += mother.get_gene(i, y)
-                else:
-                    new_gene += father.get_gene(i, y)
-            baby.genes.append(float(new_gene))
+        for i in range(len(mother.input_to_hidden.weights)):
+            for y in range(len(mother.input_to_hidden.weights[0])):
+                new_gene = ""
+                new_gene_size = min(
+                    mother.input_to_hidden.weights[i][y],
+                    father.input_to_hidden.weights[i][y],
+                )
+                for x in range(new_gene_size):
+                    if random.random() < self.uniform_rate:
+                        new_gene += mother.get_gene(i, y, x, True, False)
+                    else:
+                        new_gene += father.get_gene(i, y, x, True, False)
+                baby.input_to_hidden.weights[i][y] = float(new_gene)
+        for i in range(len(mother.hidden_to_output.weights)):
+            for y in range(len(mother.hidden_to_output.weights[0])):
+                new_gene = ""
+                new_gene_size = min(
+                    mother.hidden_to_output.weights[i][y],
+                    father.hidden_to_output.weights[i][y],
+                )
+                for x in range(new_gene_size):
+                    if random.random() < self.uniform_rate:
+                        new_gene += mother.get_gene(i, y, x, False, True)
+                    else:
+                        new_gene += father.get_gene(i, y, x, False, True)
+                baby.hidden_to_output.weights[i][y] = float(new_gene)
         return baby
 
     def mutate(self, ind):
-        for i in range(len(ind.genes)):
-            if i < 3:
-                continue
-            if random.random() <= self.mutation_rate:
-                ind.mutate_gene(i)
+        for i in range(len(ind.input_to_hidden.weights)):
+            for y in range(len(ind.input_to_hidden.weights[0])):
+                if random.random() <= self.mutation_rate:
+                    ind.mutate_gene(i, y, True, False)
+        for i in range(len(ind.hidden_to_output.weights)):
+            for y in range(len(ind.hidden_to_output.weights[0])):
+                if random.random() <= self.mutation_rate:
+                    ind.mutate_gene(i, y, False, True)

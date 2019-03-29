@@ -163,6 +163,40 @@ class Handler:
         # print(cause_of_death)
 
     def calculate_move(self):
+        input_weights = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        snake_head = self.snake.body[0]
+
+        if self.current_direction is self.directions['up']:
+            #checks for walls
+            for i in range(5): # left
+                if snake_head.x - (i+1*10) < self.play_area_boundaries["left"]:
+                    break
+                input_weights[0] -= 0.2
+            for i in range(5): # left-up
+                if snake_head.x - (i+1*10) < self.play_area_boundaries["left"] \
+                        or snake_head.y - (i+1*10) < self.play_area_boundaries["top"]:
+                    break
+                input_weights[1] -= 0.2
+            for i in range(5): # up
+                if snake_head.y - (i+1*10) < self.play_area_boundaries["top"]:
+                    break
+                input_weights[2] -= 0.2
+            for i in range(5): # right-up
+                if snake_head.x + (i+1*10) > self.play_area_boundaries["right"] \
+                        or snake_head.y - (i+1*10) < self.play_area_boundaries["top"]:
+                    break
+                input_weights[3] -= 0.2
+            for i in range(5): # right
+                if snake_head.x + (i+1*10) > self.play_area_boundaries["right"]:
+                    break
+                input_weights[4] -= 0.2
+
+            # checks for edible
+
+
+            #checks for tail
+
+
         snake_head = self.snake.body[0]
         distance_to_edible = []
         udlr = {
